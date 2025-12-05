@@ -1,0 +1,38 @@
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { UserGender } from '@shared/enums';
+import { Types } from 'mongoose';
+
+@Schema({
+  timestamps: true,
+  toJSON: { virtuals: true },
+  discriminatorKey: 'role',
+})
+export class User {
+  readonly _id: Types.ObjectId;
+
+  @Prop({ type: String, required: true, minLength: 3, trim: true })
+  name: string;
+
+  @Prop({ type: String, required: true, unique: true, trim: true })
+  email: string;
+
+  @Prop({ type: String, required: true, trim: true })
+  password: string;
+
+  @Prop({ type: String, enum: UserGender })
+  gender: UserGender;
+
+  @Prop({ type: Date })
+  dateOfBirth: Date;
+
+  @Prop({ type: String, trim: true })
+  otp: string;
+
+  @Prop({ type: Date })
+  otpExpiry: Date;
+
+  @Prop({ type: Boolean, default: false })
+  isEmailVerified: boolean;
+}
+
+export const UserSchema = SchemaFactory.createForClass(User);
