@@ -5,7 +5,6 @@ import { DoctorRepository, PatientRepository, UserRepository } from '@db/reposit
 import { PatientEntity } from './entities/patient.entity';
 import { TokenPrefix, UserRole } from '@shared/enums';
 import { DoctorEntity } from './entities/doctor.entity';
-import { TitleCasePipe } from '@common/pipes';
 import { LoginDTO } from './dto';
 import { compareHash } from '@shared/utils';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
@@ -19,7 +18,6 @@ export class AuthService {
     private readonly patientRepository: PatientRepository,
     private readonly doctorRepository: DoctorRepository,
     private readonly userRepository: UserRepository,
-    private readonly titleCasePipe: TitleCasePipe,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {}
