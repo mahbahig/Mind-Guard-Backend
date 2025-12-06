@@ -8,8 +8,9 @@ import { DoctorEntity } from './entities/doctor.entity';
 import { TitleCasePipe } from '@common/pipes';
 import { LoginDTO } from './dto';
 import { compareHash } from '@shared/utils';
-import { JwtService } from '@nestjs/jwt';
+import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class AuthService {
@@ -20,45 +21,89 @@ export class AuthService {
     private readonly userRepository: UserRepository,
     private readonly titleCasePipe: TitleCasePipe,
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
   ) {}
 
   async register(registerDTO: RegisterDTO) {
+    // Check if user already exists
     const userExist = await this.userRepository.findByEmail(registerDTO.email);
     if (userExist) throw new ConflictException('Email already in use');
 
+    // Check if passwords match
     if (registerDTO.password !== registerDTO.confirmPassword) throw new BadRequestException('Passwords do not match');
 
-    let user;
-    if (registerDTO.role == UserRole.PATIENT) {
-      const patient: PatientEntity = await this.authFactory.createPatient(registerDTO);
-      user = await this.patientRepository.create(patient);
-    } else if (registerDTO.role == UserRole.DOCTOR) {
-      if (await this.doctorRepository.findOne({ licenseNumber: registerDTO.doctor?.licenseNumber }))
-        throw new ConflictException('License number already in use');
-      const doctor: DoctorEntity = await this.authFactory.createDoctor(registerDTO);
-      user = await this.doctorRepository.create(doctor);
+    // Register user based on role
+    if (registerDTO.role.toLowerCase() === UserRole.PATIENT.toLowerCase()) return this.registerPatient(registerDTO);
+    else if (registerDTO.role.toLowerCase() === UserRole.DOCTOR.toLowerCase()) return this.registerDoctor(registerDTO);
+    else throw new BadRequestException('Invalid role');
+  }
+
+  async registerPatient(registerDTO: RegisterDTO) {
+    // Create patient
+    const patient: PatientEntity = await this.authFactory.createPatient(registerDTO);
+    // Save patient to database
+    const user = await this.patientRepository.create(patient);
+
+    // Generate JWT token
+    const token = this.createToken(user._id, user.email, user.name, UserRole.PATIENT);
+
+    return { success: true, message: 'Patient registered successfully', token };
+  }
+
+  async registerDoctor(registerDTO: RegisterDTO) {
+    // Check if license number is already in use
+    if (await this.doctorRepository.findOne({ licenseNumber: registerDTO.doctor?.licenseNumber })) {
+      throw new ConflictException('License number already in use');
     }
 
-    const token = this.jwtService.sign(
-      { userId: user._id, email: user.email, name: user.name, role: (user as any).role },
-      { secret: this.configService.get<string>('jwt.secret') },
-    );
+    // Create doctor
+    const doctor: DoctorEntity = await this.authFactory.createDoctor(registerDTO);
+    // Save doctor to database
+    const user = await this.doctorRepository.create(doctor);
 
-    return { success: true, message: `${this.titleCasePipe.transform(registerDTO.role)} registered successfully`, token };
+    // Generate JWT token
+    const token = this.createToken(user._id, user.email, user.name, UserRole.DOCTOR);
+
+    return { success: true, message: 'Doctor registered successfully', token };
   }
 
   async login(loginDTO: LoginDTO) {
+    // Find user by email
     const user = await this.userRepository.findByEmail(loginDTO.email);
     if (!user) throw new UnauthorizedException('Invalid credentials');
 
-    if (!await compareHash(loginDTO.password, user.password)) throw new UnauthorizedException('Invalid credentials');
+    // Compare user password with hashed password
+    if (!(await compareHash(loginDTO.password, user.password))) throw new UnauthorizedException('Invalid credentials');
 
-    const token = this.jwtService.sign(
-      { userId: user._id, email: user.email, name: user.name, role: (user as any).role },
-      { secret: this.configService.get<string>('jwt.secret') },
-    );
+    // Generate JWT token
+    const token = this.createToken(user._id, user.email, user.name, user.role);
 
     return { success: true, message: 'Login successful', token };
+  }
+
+  createToken(userId: Types.ObjectId, email: string, name: string, role: UserRole) {
+    let jwtOptions: JwtSignOptions;
+    let prefix: string;
+
+    if (role.toLowerCase() == UserRole.PATIENT.toLowerCase()) {
+      jwtOptions = {
+        secret: this.configService.get<string>('jwt.patient.secret'),
+      };
+      prefix = 'Bearer';
+    } else if (role.toLowerCase() == UserRole.DOCTOR.toLowerCase()) {
+      jwtOptions = {
+        secret: this.configService.get<string>('jwt.doctor.secret'),
+      };
+      prefix = 'Doctor';
+    } else {
+      throw new BadRequestException('Invalid role');
+    }
+
+    // Generate JWT token
+    let token = this.jwtService.sign({ userId, email, name, role }, jwtOptions);
+    // Add Bearer prefix to token
+    token = `${prefix} ${token}`;
+
+    return token;
   }
 }

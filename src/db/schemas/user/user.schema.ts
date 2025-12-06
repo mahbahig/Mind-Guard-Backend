@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { UserGender } from '@shared/enums';
+import { UserGender, UserRole } from '@shared/enums';
 import { Types } from 'mongoose';
 
 @Schema({
@@ -9,6 +9,7 @@ import { Types } from 'mongoose';
 })
 export class User {
   readonly _id: Types.ObjectId;
+  readonly role: UserRole;
 
   @Prop({ type: String, required: true, minLength: 3, trim: true })
   name: string;
