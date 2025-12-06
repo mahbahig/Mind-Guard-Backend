@@ -3,7 +3,7 @@ import { RegisterDTO } from './dto/register.dto';
 import { AuthFactory } from './factory/auth.factory';
 import { DoctorRepository, PatientRepository, UserRepository } from '@db/repositories';
 import { PatientEntity } from './entities/patient.entity';
-import { UserRole } from '@shared/enums';
+import { TokenPrefix, UserRole } from '@shared/enums';
 import { DoctorEntity } from './entities/doctor.entity';
 import { TitleCasePipe } from '@common/pipes';
 import { LoginDTO } from './dto';
@@ -89,12 +89,12 @@ export class AuthService {
       jwtOptions = {
         secret: this.configService.get<string>('jwt.patient.secret'),
       };
-      prefix = 'Bearer';
+      prefix = TokenPrefix.BEARER;
     } else if (role.toLowerCase() == UserRole.DOCTOR.toLowerCase()) {
       jwtOptions = {
         secret: this.configService.get<string>('jwt.doctor.secret'),
       };
-      prefix = 'Doctor';
+      prefix = TokenPrefix.DOCTOR;
     } else {
       throw new BadRequestException('Invalid role');
     }
