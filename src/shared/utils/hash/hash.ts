@@ -8,7 +8,7 @@ import { hash } from 'bcrypt';
  *
  * @async
  * @function compareHash
- * @param {string} plainText - The plain text to compare.
+ * @param {string} plainText - The plain text to hash.
  * @param {number} [saltRounds] - The number of salt rounds to use. Default value is environment variable SALT_ROUNDS.
  * @returns {Promise<string>} A promise that resolves to the hashed string.
  */
