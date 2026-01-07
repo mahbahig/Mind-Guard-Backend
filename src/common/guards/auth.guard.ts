@@ -38,7 +38,7 @@ export class AuthGuard implements CanActivate {
     // Check for payload validity
     if (!payload || !payload._id) throw new UnauthorizedException('Invalid token payload');
     // Check if user exists in database
-    if (!(await this.userRepository.exists(payload._id))) throw new UnauthorizedException('User does not exist');
+    if (!(await this.userRepository.findById(payload._id))) throw new UnauthorizedException('User does not exist');
 
     // Attach user info to request
     request.user = payload;
