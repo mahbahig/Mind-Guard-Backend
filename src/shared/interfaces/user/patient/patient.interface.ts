@@ -1,6 +1,6 @@
-import { BaseUser } from '../base-user.interface';
+import { SafeUser } from '../safe-user.interface';
 
-export interface Patient extends BaseUser {
+export interface Patient extends SafeUser {
   diagnosis?: string;
   medicalHistory?: string;
 }
