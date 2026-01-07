@@ -79,7 +79,7 @@ export class AuthService {
     return { success: true, message: 'Login successful', token };
   }
 
-  createToken(userId: Types.ObjectId, email: string, name: string, role: UserRole) {
+  createToken(_id: Types.ObjectId, email: string, name: string, role: UserRole) {
     let jwtOptions: JwtSignOptions;
     let prefix: string;
 
@@ -98,7 +98,7 @@ export class AuthService {
     }
 
     // Generate JWT token
-    let token = this.jwtService.sign({ userId, email, name, role }, jwtOptions);
+    let token = this.jwtService.sign({ _id, email, name, role }, jwtOptions);
     // Add Bearer prefix to token
     token = `${prefix} ${token}`;
 
