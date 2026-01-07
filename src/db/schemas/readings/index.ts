@@ -1,1 +1,1 @@
-export * from "./readings.schema";
+export * from './readings.schema';

@@ -1,1 +1,1 @@
-export * from "./reading-type.enum";
+export * from './reading-type.enum';

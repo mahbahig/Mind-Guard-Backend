@@ -1,6 +1,6 @@
-import { Prop, Schema } from "@nestjs/mongoose";
-import { ReadingType } from "@shared/enums";
-import { Types } from "mongoose";
+import { Prop, Schema } from '@nestjs/mongoose';
+import { ReadingType } from '@shared/enums';
+import { Types } from 'mongoose';
 
 @Schema({
   timestamps: true,

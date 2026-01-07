@@ -1,16 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Headers, Req, UseGuards } from '@nestjs/common';
 import { PatientService } from './patient.service';
-import { CreatePatientDto } from './dto/create-patient.dto';
-import { UpdatePatientDto } from './dto/update-patient.dto';
-import { AuthGuard } from '@common/guards';
+import { AuthGuard, RolesGuard } from '@common/guards';
+import { Roles } from '@common/decorators';
+import { UserRole } from '@shared/enums';
 
 @Controller('patient')
+@UseGuards(AuthGuard, RolesGuard)
+@Roles([UserRole.PATIENT])
 export class PatientController {
   constructor(private readonly patientService: PatientService) {}
 
-  @UseGuards(AuthGuard)
-  @Get()
-  findAll() {
-    return { success: true, message: 'Testing Guards' };
+  @Get('profile')
+  getProfile(@Req() req) {
+    return this.patientService.getProfile(req.user._id);
   }
 }
