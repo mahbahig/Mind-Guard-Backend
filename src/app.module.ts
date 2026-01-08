@@ -4,8 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { devConfig, prodConfig } from '@config/env';
 import { MongooseModule } from '@nestjs/mongoose';
-import { AuthModule } from './modules';
-import { PatientModule } from './modules/patient/patient.module';
+import { AuthModule, PatientModule } from './modules';
 
 @Module({
   imports: [
