@@ -33,9 +33,9 @@ export class AuthFactory {
     doctor.otp = generateOtp();
     doctor.otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
     doctor.isEmailVerified = false;
-    doctor.specialization = registerDTO.doctor!.specialization!;
-    doctor.yearsOfExperience = registerDTO.doctor!.yearsOfExperience!;
-    doctor.licenseNumber = registerDTO.doctor!.licenseNumber!;
+    doctor.specialization = registerDTO.specialization!;
+    doctor.yearsOfExperience = registerDTO.yearsOfExperience!;
+    doctor.licenseNumber = registerDTO.licenseNumber!;
 
     return doctor;
   }

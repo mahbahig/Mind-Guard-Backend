@@ -50,7 +50,7 @@ export class AuthService {
 
   async registerDoctor(registerDTO: RegisterDTO) {
     // Check if license number is already in use
-    if (await this.doctorRepository.findOne({ licenseNumber: registerDTO.doctor?.licenseNumber })) {
+    if (await this.doctorRepository.findOne({ licenseNumber: registerDTO.licenseNumber })) {
       throw new ConflictException('License number already in use');
     }
 

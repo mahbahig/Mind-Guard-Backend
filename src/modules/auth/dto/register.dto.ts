@@ -1,7 +1,6 @@
 import { UserGender, UserRole } from '@shared/enums';
-import { Type } from 'class-transformer';
-import { IsEmail, IsEnum, IsNotEmpty, IsString, MinLength, ValidateIf, ValidateNested } from 'class-validator';
-import { RegisterDoctorDTO } from './register-doctor.dto';
+import { IsEmail, IsEnum, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { Doctor } from './register-doctor.validation';
 
 export class RegisterDTO {
   @IsString()
@@ -28,14 +27,17 @@ export class RegisterDTO {
   @IsEnum(UserRole)
   role: UserRole;
 
-  @ValidateIf((dto) => dto.role == UserRole.DOCTOR)
-  @ValidateNested()
-  @Type(() => RegisterDoctorDTO)
-  @IsNotEmpty()
-  doctor?: RegisterDoctorDTO;
-
   @IsString()
   @IsNotEmpty()
   @IsEnum(UserGender)
   gender: UserGender;
+
+  @Doctor()
+  specialization?: string;
+
+  @Doctor()
+  licenseNumber?: string;
+
+  @Doctor()
+  yearsOfExperience?: number;
 }
