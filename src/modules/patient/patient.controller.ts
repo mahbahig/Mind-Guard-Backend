@@ -3,6 +3,7 @@ import { PatientService } from './patient.service';
 import { AuthGuard, RolesGuard } from '@common/guards';
 import { Roles } from '@common/decorators';
 import { UserRole } from '@shared/enums';
+import type { RequestWithUser } from '@shared/interfaces';
 
 @Controller('patient')
 @UseGuards(AuthGuard, RolesGuard)
@@ -11,7 +12,7 @@ export class PatientController {
   constructor(private readonly patientService: PatientService) {}
 
   @Get('profile')
-  getProfile(@Req() req) {
+  getProfile(@Req() req: RequestWithUser) {
     return this.patientService.getProfile(req.user._id);
   }
 
