@@ -8,8 +8,6 @@ export class PatientService {
   constructor(private readonly patientRepository: PatientRepository) {}
 
   async getProfile(_id: Types.ObjectId) {
-    // Validate patient id
-    if (!_id) throw new UnauthorizedException('Unauthorized access');
     // Fetch patient profile from database, throwing an error if not found
     const patient = await this.patientRepository.findById(_id);
     if (!patient) throw new UnauthorizedException('Patient not found');
