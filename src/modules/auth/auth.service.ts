@@ -45,7 +45,7 @@ export class AuthService {
     // Generate JWT token
     const token = this.createToken(user._id, user.email, user.name, UserRole.PATIENT);
 
-    return { success: true, message: 'Patient registered successfully', token };
+    return { message: 'Patient registered successfully', token };
   }
 
   async registerDoctor(registerDTO: RegisterDTO) {
@@ -62,7 +62,7 @@ export class AuthService {
     // Generate JWT token
     const token = this.createToken(user._id, user.email, user.name, UserRole.DOCTOR);
 
-    return { success: true, message: 'Doctor registered successfully', token };
+    return { message: 'Doctor registered successfully', token };
   }
 
   async login(loginDTO: LoginDTO) {
@@ -76,7 +76,7 @@ export class AuthService {
     // Generate JWT token
     const token = this.createToken(user._id, user.email, user.name, user.role);
 
-    return { success: true, message: 'Login successful', token };
+    return { message: 'Login successful', token };
   }
 
   createToken(_id: Types.ObjectId, email: string, name: string, role: UserRole) {
