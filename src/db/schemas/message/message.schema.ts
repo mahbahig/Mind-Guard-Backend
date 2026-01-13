@@ -15,7 +15,7 @@ export class Message {
   @Prop({ type: String, enum: MessageSender, required: true })
   sender: MessageSender;
 
-  @Prop({ type: String, required: true })
+  @Prop({ type: String, required: true, trim: true })
   content: string;
 }
 
