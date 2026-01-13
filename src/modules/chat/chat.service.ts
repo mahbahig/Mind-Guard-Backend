@@ -7,7 +7,7 @@ export class ChatService {
   constructor(
     private readonly chatRepository: ChatRepository,
     private readonly messageRepository: MessageRepository,
-    private readonly userRepository: UserRepository
+    private readonly userRepository: UserRepository,
   ) {}
   async createChat(userId: Types.ObjectId) {
     const chat = await this.chatRepository.create({ userId });
@@ -23,7 +23,7 @@ export class ChatService {
   }
 
   async getChatMessages(chatId: Types.ObjectId) {
-    if (!await this.chatRepository.findById(chatId)) throw new NotFoundException('Chat not found');
+    if (!(await this.chatRepository.findById(chatId))) throw new NotFoundException('Chat not found');
     const messages = await this.messageRepository.getAllMessagesByChatId(chatId);
     if (!messages) throw new InternalServerErrorException('Unable to retrieve messages');
     if (messages.length === 0) throw new BadRequestException('No messages found in this chat');
@@ -31,15 +31,15 @@ export class ChatService {
   }
 
   async deleteChat(chatId: Types.ObjectId) {
-    if (!await this.chatRepository.findById(chatId)) throw new NotFoundException('Chat not found');
-    const deletedMessages =await this.messageRepository.deleteMessagesByChatId(chatId);
+    if (!(await this.chatRepository.findById(chatId))) throw new NotFoundException('Chat not found');
+    const deletedMessages = await this.messageRepository.deleteMessagesByChatId(chatId);
     const deletedChat = await this.chatRepository.deleteChatById(chatId);
     if (!deletedChat) throw new NotFoundException('Chat not found');
-    return { deletedMessages: deletedMessages.deletedCount, message: 'Chat and its messages deleted successfully'};
+    return { deletedMessages: deletedMessages.deletedCount, message: 'Chat and its messages deleted successfully' };
   }
 
   async deleteAllUserChats(userId: Types.ObjectId) {
-    const deletedChats =  await this.chatRepository.deleteChatsByUserId(userId);
+    const deletedChats = await this.chatRepository.deleteChatsByUserId(userId);
     if (deletedChats.deletedCount === 0) throw new NotFoundException('No chats found for this user');
     return { deletedChats: deletedChats.deletedCount, message: 'All user chats deleted successfully' };
   }

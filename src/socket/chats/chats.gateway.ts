@@ -7,7 +7,7 @@ import { Socket } from 'socket.io';
   cors: '*',
 })
 export class ChatsGateway {
-  constructor (private readonly chatService: ChatService) {}
+  constructor(private readonly chatService: ChatService) {}
   @SubscribeMessage('userMessage')
   async handleMessage(@MessageBody() message: any, @ConnectedSocket() client: Socket) {
     const botResponse = await this.chatService.handleUserMessage(message.chatId, message.content);
