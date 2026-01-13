@@ -1,4 +1,4 @@
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { MessageSender } from '@shared/enums';
 import { Types } from 'mongoose';
 
@@ -18,3 +18,6 @@ export class Message {
   @Prop({ type: String, required: true })
   content: string;
 }
+
+export const MessageSchema = SchemaFactory.createForClass(Message);
+
