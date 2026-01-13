@@ -1,4 +1,4 @@
-import { Controller, Get, Headers, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Headers, Param, Req, UseGuards } from '@nestjs/common';
 import { PatientService } from './patient.service';
 import { AuthGuard, RolesGuard } from '@common/guards';
 import { Roles } from '@common/decorators';
@@ -13,5 +13,10 @@ export class PatientController {
   @Get('profile')
   getProfile(@Req() req) {
     return this.patientService.getProfile(req.user._id);
+  }
+
+  @Get('hrv-readings/:time')
+  getHrvReadings(@Param('time') time: string) {
+    return this.patientService.getHrvReadings(time);
   }
 }

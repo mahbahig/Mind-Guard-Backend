@@ -6,6 +6,7 @@ import { Types } from 'mongoose';
 @Injectable()
 export class PatientService {
   constructor(private readonly patientRepository: PatientRepository) {}
+
   async getProfile(_id: Types.ObjectId) {
     // Validate patient id
     if (!_id) throw new UnauthorizedException('Unauthorized access');
@@ -16,4 +17,6 @@ export class PatientService {
     // Convert to safe user and return
     return UserAdapter.toSafeUser(patient.toObject());
   }
+
+  async getHrvReadings(patientId: string) {}
 }
