@@ -1,4 +1,4 @@
-import { ChatRepository, MessageRepository } from '@db/repositories';
+import { ChatRepository, MessageRepository, UserRepository } from '@db/repositories';
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { Types } from 'mongoose';
 
@@ -7,11 +7,12 @@ export class ChatService {
   constructor(
     private readonly chatRepository: ChatRepository,
     private readonly messageRepository: MessageRepository,
+    private readonly userRepository: UserRepository
   ) {}
   async createChat(userId: Types.ObjectId) {
     const chat = await this.chatRepository.create({ userId });
     if (!chat) throw new InternalServerErrorException('Failed to create chat');
-    return chat;
+    return { message: 'Chat created successfully', chatId: chat._id };
   }
 
   async getAllChats(userId: Types.ObjectId) {
@@ -22,6 +23,7 @@ export class ChatService {
   }
 
   async getChatMessages(chatId: Types.ObjectId) {
+    if (!await this.chatRepository.findById(chatId)) throw new NotFoundException('Chat not found');
     const messages = await this.messageRepository.getAllMessagesByChatId(chatId);
     if (!messages) throw new InternalServerErrorException('Unable to retrieve messages');
     if (messages.length === 0) throw new BadRequestException('No messages found in this chat');
@@ -29,6 +31,7 @@ export class ChatService {
   }
 
   async deleteChat(chatId: Types.ObjectId) {
+    if (!await this.chatRepository.findById(chatId)) throw new NotFoundException('Chat not found');
     const deletedMessages =await this.messageRepository.deleteMessagesByChatId(chatId);
     const deletedChat = await this.chatRepository.deleteChatById(chatId);
     if (!deletedChat) throw new NotFoundException('Chat not found');
@@ -39,5 +42,22 @@ export class ChatService {
     const deletedChats =  await this.chatRepository.deleteChatsByUserId(userId);
     if (deletedChats.deletedCount === 0) throw new NotFoundException('No chats found for this user');
     return { deletedChats: deletedChats.deletedCount, message: 'All user chats deleted successfully' };
+  }
+
+  async handleUserMessage(chatId: Types.ObjectId, content: string) {
+    const chat = await this.chatRepository.findById(chatId);
+    if (!chat) throw new NotFoundException('Chat not found');
+
+    const user = await this.userRepository.findById(chat.userId);
+    if (!user) throw new NotFoundException('User not found');
+
+    const userMessage = await this.messageRepository.saveUserMessage(chatId, content);
+    if (!userMessage) throw new InternalServerErrorException('Failed to save user message');
+
+    const botResponse = `Thank you ${user!.name} for your message. This is an automated response from the bot.`;
+    const botMessage = await this.messageRepository.saveBotMessage(chatId, botResponse);
+    if (!botMessage) throw new InternalServerErrorException('Failed to save bot message');
+
+    return botResponse;
   }
 }
