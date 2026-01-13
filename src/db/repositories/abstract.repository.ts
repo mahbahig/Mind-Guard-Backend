@@ -15,10 +15,6 @@ export class AbstractRepository<T> {
     return await this._model.findById(id, projection, options);
   }
 
-  async findByEmail(email: string, projection?: ProjectionType<T>, options?: QueryOptions<T>) {
-    return await this._model.findOne({ email }, projection, options);
-  }
-
   async updateOne(filter: RootFilterQuery<T>, update: UpdateQuery<T>, options?: MongooseUpdateQueryOptions<T>) {
     return await this._model.updateOne(filter, update, options);
   }
