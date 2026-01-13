@@ -20,4 +20,3 @@ export class Message {
 }
 
 export const MessageSchema = SchemaFactory.createForClass(Message);
-
