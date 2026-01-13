@@ -1,1 +1,1 @@
-export * from "./success-response.interceptor";
+export * from './success-response.interceptor';
