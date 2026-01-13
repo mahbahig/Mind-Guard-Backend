@@ -12,7 +12,7 @@ export class MessageRepository extends AbstractRepository<Message> {
   }
 
   async getAllMessagesByChatId(chatId: Types.ObjectId) {
-    return await this.messageModel.find({ chatId });
+    return await this.messageModel.find({ chatId }).sort({ createdAt: 1 });
   }
 
   async saveUserMessage(chatId: Types.ObjectId, content: string) {
