@@ -1,5 +1,5 @@
 import { ChatRepository, MessageRepository, UserRepository } from '@db/repositories';
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { Types } from 'mongoose';
 
 @Injectable()
@@ -22,16 +22,28 @@ export class ChatService {
     return chats;
   }
 
-  async getChatMessages(chatId: Types.ObjectId) {
-    if (!(await this.chatRepository.findById(chatId))) throw new NotFoundException('Chat not found');
+  async getChatMessages(userId: Types.ObjectId, chatId: Types.ObjectId) {
+    const chat = await this.chatRepository.findById(chatId);
+    // Handle case where chat does not exist
+    if (!chat) throw new NotFoundException('Chat not found');
+
+    // Handle case where chat does not belong to the user
+    if (chat.userId != userId) throw new UnauthorizedException('You are not authorized to access this chat');
+
     const messages = await this.messageRepository.getAllMessagesByChatId(chatId);
     if (!messages) throw new InternalServerErrorException('Unable to retrieve messages');
     if (messages.length === 0) throw new BadRequestException('No messages found in this chat');
     return messages;
   }
 
-  async deleteChat(chatId: Types.ObjectId) {
-    if (!(await this.chatRepository.findById(chatId))) throw new NotFoundException('Chat not found');
+  async deleteChat(userId: Types.ObjectId, chatId: Types.ObjectId) {
+    const chat = await this.chatRepository.findById(chatId);
+    // Handle case where chat does not exist
+    if (!chat) throw new NotFoundException('Chat not found');
+
+    // Handle case where chat does not belong to the user
+    if (chat.userId != userId) throw new UnauthorizedException('You are not authorized to delete this chat');
+
     const deletedMessages = await this.messageRepository.deleteMessagesByChatId(chatId);
     const deletedChat = await this.chatRepository.deleteChatById(chatId);
     if (!deletedChat) throw new NotFoundException('Chat not found');

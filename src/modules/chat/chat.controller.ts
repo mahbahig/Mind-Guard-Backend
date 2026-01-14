@@ -20,13 +20,13 @@ export class ChatController {
   }
 
   @Get(':chatId')
-  getChatMessages(@Param('chatId') chatId: Types.ObjectId) {
-    return this.chatService.getChatMessages(chatId);
+  getChatMessages(@Req() req: RequestWithUser, @Param('chatId') chatId: Types.ObjectId) {
+    return this.chatService.getChatMessages(req.user._id, chatId);
   }
 
   @Delete(':chatId')
-  deleteChat(@Param('chatId') chatId: Types.ObjectId) {
-    return this.chatService.deleteChat(chatId);
+  deleteChat(@Req() req: RequestWithUser, @Param('chatId') chatId: Types.ObjectId) {
+    return this.chatService.deleteChat(req.user._id, chatId);
   }
 
   @Delete(':userId')
