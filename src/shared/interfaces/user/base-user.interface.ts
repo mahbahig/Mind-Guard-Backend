@@ -9,9 +9,6 @@ export interface BaseUser {
   gender: UserGender;
   dateOfBirth: Date;
   role: UserRole;
-  otp?: string;
-  otpExpiry?: Date;
-  isEmailVerified: boolean;
   createdAt?: Date;
   updatedAt?: Date;
   __v?: number;

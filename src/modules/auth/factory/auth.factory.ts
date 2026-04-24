@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { RegisterDTO } from '../dto';
 import { PatientEntity } from '../entities/patient.entity';
-import { generateOtp, hashValue } from '@shared/utils';
+import { hashValue } from '@shared/utils';
 import { DoctorEntity } from '../entities/doctor.entity';
 import { TitleCasePipe } from '@common/pipes';
 
@@ -16,10 +16,6 @@ export class AuthFactory {
     patient.email = registerDTO.email;
     patient.password = await hashValue(registerDTO.password);
     patient.gender = registerDTO.gender;
-    patient.otp = generateOtp();
-    patient.otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
-    patient.isEmailVerified = false;
-
     return patient;
   }
 
@@ -30,9 +26,6 @@ export class AuthFactory {
     doctor.email = registerDTO.email;
     doctor.password = await hashValue(registerDTO.password);
     doctor.gender = registerDTO.gender;
-    doctor.otp = generateOtp();
-    doctor.otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
-    doctor.isEmailVerified = false;
     doctor.specialization = registerDTO.specialization!;
     doctor.yearsOfExperience = registerDTO.yearsOfExperience!;
     doctor.licenseNumber = registerDTO.licenseNumber!;

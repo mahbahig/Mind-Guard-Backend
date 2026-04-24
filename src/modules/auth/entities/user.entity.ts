@@ -8,7 +8,4 @@ export abstract class UserEntity {
   password: string;
   gender: UserGender;
   dateOfBirth: Date;
-  otp: string;
-  otpExpiry: Date;
-  isEmailVerified: boolean;
 }

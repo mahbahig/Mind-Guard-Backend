@@ -25,15 +25,6 @@ export class User {
 
   @Prop({ type: Date })
   dateOfBirth: Date;
-
-  @Prop({ type: String, trim: true })
-  otp: string;
-
-  @Prop({ type: Date })
-  otpExpiry: Date;
-
-  @Prop({ type: Boolean, default: false })
-  isEmailVerified: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
