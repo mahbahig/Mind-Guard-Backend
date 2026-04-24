@@ -39,11 +39,11 @@ export class AuthService {
   async registerPatient(registerDTO: RegisterDTO) {
     // Create patient
     const patient: PatientEntity = await this.authFactory.createPatient(registerDTO);
+    // Generate JWT token
+    const token = this.createToken(patient._id, patient.email, patient.name, UserRole.PATIENT);
+
     // Save patient to database
     const user = await this.patientRepository.create(patient);
-
-    // Generate JWT token
-    const token = this.createToken(user._id, user.email, user.name, UserRole.PATIENT);
 
     return { message: 'Patient registered successfully', token };
   }
@@ -56,11 +56,12 @@ export class AuthService {
 
     // Create doctor
     const doctor: DoctorEntity = await this.authFactory.createDoctor(registerDTO);
+    // Generate JWT token
+    const token = this.createToken(doctor._id, doctor.email, doctor.name, UserRole.DOCTOR);
+
     // Save doctor to database
     const user = await this.doctorRepository.create(doctor);
 
-    // Generate JWT token
-    const token = this.createToken(user._id, user.email, user.name, UserRole.DOCTOR);
 
     return { message: 'Doctor registered successfully', token };
   }

@@ -21,7 +21,9 @@ export class AuthGuard implements CanActivate {
     if (!authorization) throw new UnauthorizedException('Authorization token is missing');
 
     // Split the authorization header
-    const [prefix, token]: string[] = authorization.split(' ');
+    const tokenArray = authorization.split(' ');
+    if (tokenArray.length !== 2) throw new UnauthorizedException('Invalid authorization token format');
+    const [prefix, token]: string[] = tokenArray;
     // Handle invalid format
     if (!prefix || !token) throw new UnauthorizedException('Invalid authorization token format');
 
