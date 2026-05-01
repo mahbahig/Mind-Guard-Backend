@@ -7,10 +7,9 @@ export class ChatService {
   constructor(
     private readonly chatRepository: ChatRepository,
     private readonly messageRepository: MessageRepository,
-    private readonly userRepository: UserRepository,
   ) {}
   async createChat(userId: Types.ObjectId) {
-    const chat = await this.chatRepository.create({ userId });
+    const chat = await this.chatRepository.create({ user: userId });
     if (!chat) throw new InternalServerErrorException('Failed to create chat');
     return { message: 'Chat created successfully', chatId: chat._id };
   }
@@ -28,9 +27,9 @@ export class ChatService {
     if (!chat) throw new NotFoundException('Chat not found');
 
     // Handle case where chat does not belong to the user
-    if (chat.userId != userId) throw new UnauthorizedException('You are not authorized to access this chat');
+    if (chat.user != userId) throw new UnauthorizedException('You are not authorized to access this chat');
 
-    const messages = await this.messageRepository.getAllMessagesByChatId(chatId);
+    const messages = await this.messageRepository.getAllChatMessages(chatId);
     if (!messages) throw new InternalServerErrorException('Unable to retrieve messages');
     if (messages.length === 0) throw new BadRequestException('No messages found in this chat');
     return messages;
@@ -42,9 +41,9 @@ export class ChatService {
     if (!chat) throw new NotFoundException('Chat not found');
 
     // Handle case where chat does not belong to the user
-    if (chat.userId != userId) throw new UnauthorizedException('You are not authorized to delete this chat');
+    if (chat.user != userId) throw new UnauthorizedException('You are not authorized to delete this chat');
 
-    const deletedMessages = await this.messageRepository.deleteMessagesByChatId(chatId);
+    const deletedMessages = await this.messageRepository.deleteChatMessages(chatId);
     const deletedChat = await this.chatRepository.deleteChatById(chatId);
     if (!deletedChat) throw new NotFoundException('Chat not found');
     return { deletedMessages: deletedMessages.deletedCount, message: 'Chat and its messages deleted successfully' };
@@ -60,13 +59,10 @@ export class ChatService {
     const chat = await this.chatRepository.findById(chatId);
     if (!chat) throw new NotFoundException('Chat not found');
 
-    const user = await this.userRepository.findById(chat.userId);
-    if (!user) throw new NotFoundException('User not found');
-
     const userMessage = await this.messageRepository.saveUserMessage(chatId, content);
     if (!userMessage) throw new InternalServerErrorException('Failed to save user message');
 
-    const botResponse = `Thank you ${user!.name} for your message. This is an automated response from the bot.`;
+    const botResponse = `Thank you for your message. This is an automated response from the bot.`;
     const botMessage = await this.messageRepository.saveBotMessage(chatId, botResponse);
     if (!botMessage) throw new InternalServerErrorException('Failed to save bot message');
 

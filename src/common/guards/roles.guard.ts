@@ -6,10 +6,13 @@ import { Reflector } from '@nestjs/core';
 export class RolesGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) {}
   canActivate(context: ExecutionContext): boolean {
-    const request = context.switchToHttp().getRequest();
-    const roles = this.reflector.getAllAndMerge(Roles, [context.getClass(), context.getHandler()]);
+    const isPublic = this.reflector.getAllAndOverride<boolean>('isPublic', [context.getHandler(), context.getClass()]);
 
-    if (!request.user) throw new UnauthorizedException('Please login to access this resource');
+    if (isPublic) return true;
+
+    const request = context.switchToHttp().getRequest();
+    const roles = this.reflector.getAllAndOverride(Roles, [context.getHandler(), context.getClass()]);
+
     if (!roles.includes(request.user.role.toLowerCase())) throw new UnauthorizedException('Access denied. You are not authorized to access this resource');
 
     return true;

@@ -1,25 +1,41 @@
-import { DeleteResult, Model, MongooseUpdateQueryOptions, ProjectionType, QueryOptions, RootFilterQuery, Types, UpdateQuery } from 'mongoose';
+import { DeleteResult, Model, MongooseUpdateQueryOptions, ProjectionType, QueryOptions, Types, UpdateQuery, QueryFilter } from 'mongoose';
 
 export class AbstractRepository<T> {
   constructor(private readonly _model: Model<T>) {}
 
-  async create(item: Partial<T>) {
-    return await this._model.create(item);
+  create(item: Partial<T>) {
+    return this._model.create(item);
   }
 
-  async findOne(filter: RootFilterQuery<T>, projection?: ProjectionType<T>, options?: QueryOptions<T>) {
-    return await this._model.findOne(filter, projection, options);
+  findOne(filter: QueryFilter<T>, projection?: ProjectionType<T>, options?: QueryOptions<T>) {
+    return this._model.findOne(filter, projection, options);
   }
 
-  async findById(id: Types.ObjectId, projection?: ProjectionType<T>, options?: QueryOptions<T>) {
-    return await this._model.findById(id, projection, options);
+  findAll(filter?: QueryFilter<T>, projection?: ProjectionType<T>, options?: QueryOptions<T>) {
+    return this._model.find(filter, projection, options);
   }
 
-  async updateOne(filter: RootFilterQuery<T>, update: UpdateQuery<T>, options?: MongooseUpdateQueryOptions<T>) {
-    return await this._model.updateOne(filter, update, options);
+  findMany(filter: QueryFilter<T>, projection?: ProjectionType<T>, options?: QueryOptions<T>) {
+    return this._model.find(filter, projection, options);
   }
 
-  async deleteOne(filter: RootFilterQuery<T>): Promise<DeleteResult> {
-    return await this._model.deleteOne(filter);
+  findById(id: Types.ObjectId, projection?: ProjectionType<T>, options?: QueryOptions<T>) {
+    return this._model.findById(id, projection, options);
+  }
+
+  updateOne(filter: QueryFilter<T>, update: UpdateQuery<T>, options?: MongooseUpdateQueryOptions<T>) {
+    return this._model.updateOne(filter, update, options);
+  }
+
+  findByIdAndUpdate(id: Types.ObjectId, update: UpdateQuery<T>, options?: MongooseUpdateQueryOptions<T>) {
+    return this._model.updateOne({ _id: id }, update, options);
+  }
+
+  deleteOne(filter: QueryFilter<T>): Promise<DeleteResult> {
+    return this._model.deleteOne(filter);
+  }
+
+  deleteMany(filter: QueryFilter<T>): Promise<DeleteResult> {
+    return this._model.deleteMany(filter);
   }
 }

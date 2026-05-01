@@ -1,3 +1,3 @@
 export * from './user.schema';
-export * from './doctor';
-export * from './patient';
+export * from './doctor.schema';
+export * from './patient.schema';

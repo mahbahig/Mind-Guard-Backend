@@ -9,12 +9,4 @@ export class PatientRepository extends AbstractRepository<Patient> {
   constructor(@InjectModel(Patient.name) private readonly patientModel: Model<Patient>) {
     super(patientModel);
   }
-
-  async findByEmail(email: string, projection?: ProjectionType<Patient>, options?: QueryOptions<Patient>) {
-    return await this.patientModel.findOne({ email }, projection, options);
-  }
-
-  async exists(email: string) {
-    return await this.findByEmail(email);
-  }
 }

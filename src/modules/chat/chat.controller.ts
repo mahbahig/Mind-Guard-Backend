@@ -1,11 +1,9 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { ChatService } from './chat.service';
-import { AuthGuard } from '@common/guards';
 import { Types } from 'mongoose';
 import type { RequestWithUser } from '@shared/interfaces';
 
 @Controller('chat')
-@UseGuards(AuthGuard)
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 

@@ -5,23 +5,24 @@ import { Types } from 'mongoose';
 @Schema({
   timestamps: true,
   toJSON: { virtuals: true },
-  discriminatorKey: 'role',
 })
 export class User {
   readonly _id: Types.ObjectId;
-  readonly role: UserRole;
 
   @Prop({ type: String, required: true, minLength: 3, trim: true })
-  name: string;
+  name!: string;
 
   @Prop({ type: String, required: true, unique: true, trim: true })
-  email: string;
+  email!: string;
 
   @Prop({ type: String, required: true, trim: true })
-  password: string;
+  password!: string;
 
   @Prop({ type: String, enum: UserGender })
   gender: UserGender;
+
+  @Prop({ type: String, enum: UserRole })
+  role: UserRole;
 
   @Prop({ type: Date })
   dateOfBirth: Date;

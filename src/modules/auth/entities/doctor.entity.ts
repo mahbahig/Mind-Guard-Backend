@@ -1,8 +1,7 @@
-import { UserEntity } from './user.entity';
+import { Types } from 'mongoose';
 
-export class DoctorEntity extends UserEntity {
+export class DoctorEntity {
+  _id: Types.ObjectId;
   specialization: string;
-  licenseNumber: string;
-  clinicAddress: string;
   yearsOfExperience: number;
 }

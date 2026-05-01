@@ -1,34 +1,33 @@
 import { Injectable } from '@nestjs/common';
 import { RegisterDTO } from '../dto';
-import { PatientEntity } from '../entities/patient.entity';
 import { hashValue } from '@shared/utils';
 import { DoctorEntity } from '../entities/doctor.entity';
 import { TitleCasePipe } from '@common/pipes';
+import { UserEntity } from '../entities/user.entity';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class AuthFactory {
   constructor(private readonly titleCasePipe: TitleCasePipe) {}
 
-  async createPatient(registerDTO: RegisterDTO): Promise<PatientEntity> {
-    const patient = new PatientEntity();
+  async createUser(registerDTO: RegisterDTO): Promise<UserEntity> {
+    const user = new UserEntity();
 
-    patient.name = this.titleCasePipe.transform(registerDTO.name);
-    patient.email = registerDTO.email;
-    patient.password = await hashValue(registerDTO.password);
-    patient.gender = registerDTO.gender;
-    return patient;
+    user.name = this.titleCasePipe.transform(registerDTO.name);
+    user.email = registerDTO.email;
+    user.password = await hashValue(registerDTO.password);
+    user.gender = registerDTO.gender;
+    user.role = registerDTO.role;
+
+    return user;
   }
 
-  async createDoctor(registerDTO: RegisterDTO): Promise<DoctorEntity> {
+  createDoctor(userId: Types.ObjectId, registerDTO: RegisterDTO): DoctorEntity {
     const doctor = new DoctorEntity();
 
-    doctor.name = registerDTO.name;
-    doctor.email = registerDTO.email;
-    doctor.password = await hashValue(registerDTO.password);
-    doctor.gender = registerDTO.gender;
+    doctor._id = userId;
     doctor.specialization = registerDTO.specialization!;
     doctor.yearsOfExperience = registerDTO.yearsOfExperience!;
-    doctor.licenseNumber = registerDTO.licenseNumber!;
 
     return doctor;
   }

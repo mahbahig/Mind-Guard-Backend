@@ -11,19 +11,19 @@ export class MessageRepository extends AbstractRepository<Message> {
     super(messageModel);
   }
 
-  async getAllMessagesByChatId(chatId: Types.ObjectId) {
-    return await this.messageModel.find({ chatId }).sort({ createdAt: 1 });
+  getAllChatMessages(chat: Types.ObjectId) {
+    return this.messageModel.find({ chat }).sort({ createdAt: 1 });
   }
 
-  async saveUserMessage(chatId: Types.ObjectId, content: string) {
-    return await this.create({ chatId, sender: MessageSender.USER, content });
+  saveUserMessage(chat: Types.ObjectId, content: string) {
+    return this.create({ chat, sender: MessageSender.USER, content });
   }
 
-  async saveBotMessage(chatId: Types.ObjectId, content: string) {
-    return await this.create({ chatId, sender: MessageSender.BOT, content });
+  saveBotMessage(chat: Types.ObjectId, content: string) {
+    return this.create({ chat, sender: MessageSender.BOT, content });
   }
 
-  async deleteMessagesByChatId(chatId: Types.ObjectId) {
-    return await this.messageModel.deleteMany({ chatId });
+  deleteChatMessages(chat: Types.ObjectId) {
+    return this.messageModel.deleteMany({ chat });
   }
 }

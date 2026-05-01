@@ -6,15 +6,9 @@ import { UserRole } from '@shared/enums';
 import type { RequestWithUser } from '@shared/interfaces';
 
 @Controller('patient')
-@UseGuards(AuthGuard, RolesGuard)
 @Roles([UserRole.PATIENT])
 export class PatientController {
   constructor(private readonly patientService: PatientService) {}
-
-  @Get('profile')
-  getProfile(@Req() req: RequestWithUser) {
-    return this.patientService.getProfile(req.user._id);
-  }
 
   @Get('hrv-readings/:time')
   getHrvReadings(@Param('time') time: string) {

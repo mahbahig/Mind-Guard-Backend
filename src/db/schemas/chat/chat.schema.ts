@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
+import { ModelName } from '@shared/enums';
 
 @Schema({
   timestamps: true,
@@ -8,8 +9,8 @@ import { Types } from 'mongoose';
 export class Chat {
   readonly _id: Types.ObjectId;
 
-  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
-  userId: Types.ObjectId;
+  @Prop({ type: Types.ObjectId, ref: ModelName.USER, required: true })
+  user: Types.ObjectId;
 
   @Prop({ type: String })
   context: string;

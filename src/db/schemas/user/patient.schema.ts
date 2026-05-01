@@ -1,12 +1,16 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { User } from '../user.schema';
+import { Types } from 'mongoose';
+import { ModelName } from '@shared/enums';
 
 @Schema({
   timestamps: true,
   toJSON: { virtuals: true },
-  discriminatorKey: 'role',
+  _id: false,
 })
-export class Patient extends User {
+export class Patient {
+  @Prop({ type: Types.ObjectId, ref: ModelName.USER, required: true })
+  _id: Types.ObjectId;
+
   @Prop({ type: String, trim: true })
   diagnosis: string;
 

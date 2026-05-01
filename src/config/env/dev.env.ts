@@ -18,11 +18,8 @@ export default () => ({
     expiryMinutes: parseInt(process.env.OTP_EXPIRY_MINUTES!, 10),
   },
   jwt: {
-    doctor: {
-      secret: process.env.DOCTOR_ACCESS_JWT_SECRET,
-    },
-    patient: {
-      secret: process.env.PATIENT_ACCESS_JWT_SECRET,
+    user: {
+      secret: process.env.USER_ACCESS_JWT_SECRET,
     },
   },
   encryption: {
