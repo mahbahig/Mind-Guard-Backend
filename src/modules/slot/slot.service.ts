@@ -13,7 +13,7 @@ export class SlotService {
     return 'This action adds a new slot';
   }
 
-  async getDoctorSlots(doctorId: Types.ObjectId, query: FindAllOptionsDto, status?: SlotStatus, ) {
+  async getDoctorSlots(doctorId: Types.ObjectId, query: FindAllOptionsDto, status?: SlotStatus) {
     let message: string = 'Slots retrieved successfully';
     const slots = await this.slotRepository.findAllWithFilters(doctorId, query, status);
     if (!slots) message = 'No slots found with the given criteria';

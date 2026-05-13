@@ -18,7 +18,11 @@ export class SlotController {
   }
 
   @Get('my')
-  getDoctorSlots(@Doctor() doctor: DoctorInRequest, @Query() query: FindAllOptionsDto, @Query('status', new ParseEnumPipe(SlotStatus, { optional: true })) status?: SlotStatus) {
+  getDoctorSlots(
+    @Doctor() doctor: DoctorInRequest,
+    @Query() query: FindAllOptionsDto,
+    @Query('status', new ParseEnumPipe(SlotStatus, { optional: true })) status?: SlotStatus,
+  ) {
     return this.slotService.getDoctorSlots(doctor._id, query, status);
   }
 

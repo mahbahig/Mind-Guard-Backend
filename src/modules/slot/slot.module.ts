@@ -7,7 +7,7 @@ import { SlotSchema } from '@db/schemas';
 import { SlotRepository } from '@db/repositories';
 
 @Module({
-  imports:[MongooseModule.forFeature([{ name: ModelName.SLOT, schema: SlotSchema }])],
+  imports: [MongooseModule.forFeature([{ name: ModelName.SLOT, schema: SlotSchema }])],
   controllers: [SlotController],
   providers: [SlotService, SlotRepository],
   exports: [SlotService, SlotRepository],

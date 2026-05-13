@@ -16,7 +16,7 @@ export class SlotRepository extends AbstractRepository<Slot> {
     const filter: QueryFilter<Slot> = { doctor: doctorId };
     if (status) filter.status = status;
     return this.findMany({ ...filter });
-  };
+  }
 
   findAllWithFilters(doctorId: Types.ObjectId, options: FindAllOptionsDto, status?: SlotStatus) {
     const MAX_LIMIT = 1000;

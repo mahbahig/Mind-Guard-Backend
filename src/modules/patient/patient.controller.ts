@@ -1,17 +1,14 @@
-import { Controller, Get, Headers, Param, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { PatientService } from './patient.service';
-import { AuthGuard, RolesGuard } from '@common/guards';
-import { Roles } from '@common/decorators';
-import { UserRole } from '@shared/enums';
-import type { RequestWithUser } from '@shared/interfaces';
+import { ParseObjectIdPipe } from '@nestjs/mongoose';
+import { Types } from 'mongoose';
 
 @Controller('patient')
-@Roles([UserRole.PATIENT])
 export class PatientController {
   constructor(private readonly patientService: PatientService) {}
 
-  @Get('hrv-readings/:time')
-  getHrvReadings(@Param('time') time: string) {
-    return this.patientService.getHrvReadings(time);
+  @Get('doctor/:id')
+  getDoctorPatients(@Param('id', ParseObjectIdPipe) doctorId: Types.ObjectId) {
+    return this.patientService.getDoctorPatients(doctorId);
   }
 }
