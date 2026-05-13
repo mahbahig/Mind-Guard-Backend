@@ -16,6 +16,12 @@ export class Patient {
 
   @Prop({ type: String, trim: true })
   medicalHistory: string;
+
+  @Prop({ type: String, trim: true })
+  currentMedications: string;
+
+  @Prop({ type: Types.ObjectId, ref: ModelName.DOCTOR })
+  treatingDoctor: Types.ObjectId;
 }
 
 export const PatientSchema = SchemaFactory.createForClass(Patient);

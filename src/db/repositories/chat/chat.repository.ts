@@ -10,19 +10,19 @@ export class ChatRepository extends AbstractRepository<Chat> {
     super(chatModel);
   }
 
-  async saveChatContext(chatId: Types.ObjectId, context: string) {
-    return await this.updateOne({ _id: chatId }, { context });
+  saveChatContext(chatId: Types.ObjectId, context: string) {
+    return this.updateOne({ _id: chatId }, { context });
   }
 
-  async getAllChatsByUserId(userId: Types.ObjectId) {
-    return await this.chatModel.find({ userId });
+  getAllChatsByUserId(userId: Types.ObjectId) {
+    return this.chatModel.find({ userId });
   }
 
-  async deleteChatById(chatId: Types.ObjectId) {
-    return await this.deleteOne({ _id: chatId });
+  deleteChatById(chatId: Types.ObjectId) {
+    return this.deleteOne({ _id: chatId });
   }
 
-  async deleteChatsByUserId(userId: Types.ObjectId) {
-    return await this.chatModel.deleteMany({ userId });
+  deleteChatsByUserId(userId: Types.ObjectId) {
+    return this.chatModel.deleteMany({ userId });
   }
 }

@@ -62,6 +62,8 @@ export class ChatService {
     const userMessage = await this.messageRepository.saveUserMessage(chatId, content);
     if (!userMessage) throw new InternalServerErrorException('Failed to save user message');
 
+    // TODO: GET LATEST 5 MESSAGES FROM BOTH USER AND BOT, GIVEN THE chatId. AND SEND THEM TO THE BOT FOR CONTEXT.
+    // TODO: GET USER DATA FROM THE DB AND HRV DATA FROM THE DB AND SEND THEM TO THE BOT FOR CONTEXT.
     const botResponse = `Thank you for your message. This is an automated response from the bot.`;
     const botMessage = await this.messageRepository.saveBotMessage(chatId, botResponse);
     if (!botMessage) throw new InternalServerErrorException('Failed to save bot message');

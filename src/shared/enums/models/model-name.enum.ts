@@ -5,4 +5,5 @@ export enum ModelName {
   USER = 'User',
   DOCTOR = 'Doctor',
   PATIENT = 'Patient',
+  SLOT = 'Slot',
 }

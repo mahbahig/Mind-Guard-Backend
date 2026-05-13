@@ -11,6 +11,9 @@ export class Doctor {
   @Prop({ type: Types.ObjectId, ref: ModelName.USER, required: true })
   _id: Types.ObjectId;
 
+  @Prop({ type: String, default: '1h', trim: true })
+  sessionTime: string;
+
   @Prop({ type: String, required: true, trim: true })
   specialization: string;
 

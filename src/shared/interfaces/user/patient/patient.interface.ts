@@ -1,6 +1,9 @@
-import { SafeUser } from '../safe-user.interface';
+import { Types } from 'mongoose';
 
-export interface Patient extends SafeUser {
-  diagnosis?: string;
-  medicalHistory?: string;
+export interface PatientInRequest {
+  _id: Types.ObjectId;
+  diagnosis: string;
+  medicalHistory: string;
+  currentMedications: string;
+  treatingDoctor: Types.ObjectId;
 }

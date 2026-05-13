@@ -1,4 +1,5 @@
 import { DeleteResult, Model, MongooseUpdateQueryOptions, ProjectionType, QueryOptions, Types, UpdateQuery, QueryFilter } from 'mongoose';
+import { FindAllOptionsDto } from '@common/dtos';
 
 export class AbstractRepository<T> {
   constructor(private readonly _model: Model<T>) {}
