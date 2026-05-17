@@ -19,7 +19,7 @@ export class MessageRepository extends AbstractRepository<Message> {
     return this.create({ chat, sender: MessageSender.USER, content });
   }
 
-  saveBotMessage(chat: Types.ObjectId, content: string) {
+  saveBotResponse(chat: Types.ObjectId, content: string) {
     return this.create({ chat, sender: MessageSender.BOT, content });
   }
 

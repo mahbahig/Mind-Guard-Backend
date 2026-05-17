@@ -5,12 +5,6 @@ export default () => ({
     password: process.env.DATABASE_PASSWORD,
     url: process.env.DATABASE_URL,
   },
-  sendEmail: {
-    email: process.env.EMAIL,
-    password: process.env.EMAIL_PASSWORD,
-    service: process.env.EMAIL_HOST,
-    port: parseInt(process.env.EMAIL_PORT!, 10),
-  },
   hashing: {
     saltRounds: parseInt(process.env.HASHING_SALT_ROUNDS!, 10),
   },
@@ -24,5 +18,8 @@ export default () => ({
   },
   encryption: {
     secret: process.env.ENCRYPTION_SECRET,
+  },
+  aiService: {
+    url: process.env.AI_SERVICE_URL,
   },
 });

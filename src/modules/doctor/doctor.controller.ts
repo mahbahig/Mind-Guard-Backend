@@ -4,7 +4,7 @@ import { Roles, User } from '@common/decorators';
 import { UserRole } from '@shared/enums';
 import { ParseObjectIdPipe } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
-import type { UserInToken } from '@shared/interfaces';
+import type { DoctorInRequest } from '@shared/interfaces';
 import { CreateSessionSlotsDto } from './dto';
 
 @Controller('doctor')
@@ -23,7 +23,7 @@ export class DoctorController {
   }
 
   @Post()
-  createSessionSlots(@User() doctor: UserInToken, @Body() createSessionSlotsDto: CreateSessionSlotsDto) {
+  createSessionSlots(@User() doctor: DoctorInRequest, @Body() createSessionSlotsDto: CreateSessionSlotsDto) {
     return this.doctorService.createSessionSlots(doctor._id, createSessionSlotsDto);
   }
 }

@@ -1,4 +1,4 @@
 export enum MessageSender {
-  USER = 'USER',
-  BOT = 'BOT',
+  USER = 'user',
+  BOT = 'bot',
 }

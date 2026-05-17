@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { devConfig, prodConfig } from '@config/env';
 import { MongooseModule } from '@nestjs/mongoose';
-import { AuthModule, ChatModule, DoctorModule, PatientModule, UserModule } from './modules';
+import { AuthModule, ChatModule, DoctorModule, PatientModule, SocketModule, UserModule } from './modules';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { AuthGuard, RolesGuard } from '@common/guards';
 import { HttpExceptionFilter } from '@common/filters';
@@ -29,6 +29,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     PatientModule,
     DoctorModule,
     ChatModule,
+    SocketModule
   ],
   controllers: [AppController],
   providers: [

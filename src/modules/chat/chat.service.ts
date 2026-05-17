@@ -1,13 +1,20 @@
 import { ChatRepository, MessageRepository, UserRepository } from '@db/repositories';
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { SocketEvents } from '@shared/enums';
 import { Types } from 'mongoose';
+import { Socket } from 'socket.io';
 
 @Injectable()
 export class ChatService {
+  private readonly aiUrl: string;
   constructor(
     private readonly chatRepository: ChatRepository,
     private readonly messageRepository: MessageRepository,
-  ) {}
+    private readonly configService: ConfigService,
+  ) {
+    this.aiUrl = this.configService.getOrThrow<string>('aiService.url');
+  }
   async createChat(userId: Types.ObjectId) {
     const chat = await this.chatRepository.create({ user: userId });
     if (!chat) throw new InternalServerErrorException('Failed to create chat');
@@ -55,19 +62,32 @@ export class ChatService {
     return { deletedChats: deletedChats.deletedCount, message: 'All user chats deleted successfully' };
   }
 
-  async handleUserMessage(chatId: Types.ObjectId, content: string) {
-    const chat = await this.chatRepository.findById(chatId);
-    if (!chat) throw new NotFoundException('Chat not found');
+  async generateResponse(chatId: Types.ObjectId, content: string, client: Socket) {
+    // const chat = await this.chatRepository.findById(chatId);
+    // if (!chat) throw new NotFoundException('Chat not found');
 
-    const userMessage = await this.messageRepository.saveUserMessage(chatId, content);
-    if (!userMessage) throw new InternalServerErrorException('Failed to save user message');
+    await this.messageRepository.saveUserMessage(chatId, content);
 
     // TODO: GET LATEST 5 MESSAGES FROM BOTH USER AND BOT, GIVEN THE chatId. AND SEND THEM TO THE BOT FOR CONTEXT.
     // TODO: GET USER DATA FROM THE DB AND HRV DATA FROM THE DB AND SEND THEM TO THE BOT FOR CONTEXT.
-    const botResponse = `Thank you for your message. This is an automated response from the bot.`;
-    const botMessage = await this.messageRepository.saveBotMessage(chatId, botResponse);
-    if (!botMessage) throw new InternalServerErrorException('Failed to save bot message');
+    // const botResponse = `Thank you for your message. This is an automated response from the bot.`;
+    const body = {
+      old_messages: [],
+      user_id: chatId.toString(),
+      content,
+    };
+    const response = await fetch(`${this.aiUrl}/chat/generate`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+      headers: { 'Content-Type': 'application/json' },
+    });
+    let fullText = '';
 
-    return botResponse;
+    for await (const chunk of response.body as any) {
+      const text = new TextDecoder().decode(chunk);
+      fullText += text;
+      client.emit(SocketEvents.BOT_MESSAGE, { text });
+    }
+    await this.messageRepository.saveBotResponse(chatId, fullText);
   }
 }

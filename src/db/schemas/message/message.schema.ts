@@ -7,16 +7,16 @@ import { Types } from 'mongoose';
   toJSON: { virtuals: true },
 })
 export class Message {
-  readonly _id: Types.ObjectId;
+  readonly _id!: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: ModelName.CHAT, index: true, required: true })
-  chat: Types.ObjectId;
+  chat!: Types.ObjectId;
 
   @Prop({ type: String, enum: MessageSender, required: true })
-  sender: MessageSender;
+  sender!: MessageSender;
 
   @Prop({ type: String, required: true, trim: true })
-  content: string;
+  content!: string;
 }
 
 export const MessageSchema = SchemaFactory.createForClass(Message);

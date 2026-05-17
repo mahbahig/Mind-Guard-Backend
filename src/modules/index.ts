@@ -5,3 +5,4 @@ export * from './doctor';
 export * from './user';
 export * from './reading';
 export * from './slot';
+export * from './socket';
