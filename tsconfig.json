@@ -13,7 +13,6 @@
     "target": "ES2023",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
@@ -22,12 +21,19 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@db/*": ["src/db/*"],
-      "@config/*": ["src/config/*"],
-      "@modules/*": ["src/modules/*"],
-      "@shared/*": ["src/shared/*"],
-      "@common/*": ["src/common/*"],
-      "@socket/*": ["src/socket/*"]
+      "@common": ["./src/common/index"],
+      "@config": ["./src/config/index"],
+      "@core": ["./src/core/index"],
+      "@database": ["./src/database/index"],
+      "@features": ["./src/features/index"],
+      "@shared": ["./src/shared/index"],
+
+      "@common/*": ["./src/common/*"],
+      "@config/*": ["./src/config/*"],
+      "@core/*": ["./src/core/*"],
+      "@database/*": ["./src/database/*"],
+      "@features/*": ["./src/features/*"],
+      "@shared/*": ["./src/shared/*"],
     }
   }
 }

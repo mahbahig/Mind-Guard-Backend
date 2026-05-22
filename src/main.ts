@@ -2,9 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from '@common/filters';
-import { ConfigService } from '@nestjs/config';
-import { setConfigService } from '@config/app.config';
 import { SuccessResponseInterceptor } from '@common/interceptors';
+import { setupSwagger } from '@core';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -20,7 +19,8 @@ async function bootstrap() {
       validationError: { target: false },
     }),
   );
-  setConfigService(app.get(ConfigService));
+
+  setupSwagger(app);
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

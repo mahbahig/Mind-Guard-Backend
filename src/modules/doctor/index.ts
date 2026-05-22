@@ -1,2 +1,0 @@
-export * from './doctor.module';
-export * from './doctor.service';

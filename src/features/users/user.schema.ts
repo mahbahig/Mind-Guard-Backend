@@ -1,0 +1,33 @@
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { UserGender, UserRole } from '@shared/enums';
+import { HydratedDocument, Types } from 'mongoose';
+
+export const USER_MODEL_NAME = 'User';
+@Schema({
+  timestamps: true,
+  toJSON: { virtuals: true },
+})
+export class User {
+  readonly _id!: Types.ObjectId;
+
+  @Prop({ type: String, required: true, minLength: 3, trim: true })
+  name!: string;
+
+  @Prop({ type: String, required: true, unique: true, trim: true })
+  email!: string;
+
+  @Prop({ type: String, required: true, trim: true })
+  password!: string;
+
+  @Prop({ type: String, enum: UserGender })
+  gender!: UserGender;
+
+  @Prop({ type: String, enum: UserRole, default: UserRole.PATIENT })
+  role!: UserRole;
+
+  @Prop({ type: Date })
+  dateOfBirth!: Date;
+}
+
+export type UserDocument = HydratedDocument<User>;
+export const UserSchema = SchemaFactory.createForClass(User);

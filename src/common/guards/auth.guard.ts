@@ -2,15 +2,16 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { TokenPrefix } from '@shared/enums';
-import { UserRepository } from '@db/repositories';
 import { Reflector } from '@nestjs/core';
+import { UsersService } from '@features';
+import { Env } from '@config';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-    private readonly userRepository: UserRepository,
+    private readonly usersService: UsersService,
     private readonly reflector: Reflector,
   ) {}
 
@@ -33,12 +34,12 @@ export class AuthGuard implements CanActivate {
 
     // Validate token prefix
     if (prefix.toLowerCase() !== TokenPrefix.BEARER) throw new UnauthorizedException('Invalid token prefix');
-    const payload = this.jwtService.verify(token, { secret: this.configService.get<string>('jwt.user.secret') });
+    const payload = this.jwtService.verify(token, { secret: this.configService.getOrThrow<string>(Env.JWT_SECRET) });
 
     // Check for payload validity
     if (!payload || !payload._id) throw new UnauthorizedException('Invalid token payload');
     // Check if user exists in database
-    const user = await this.userRepository.findById(payload._id);
+    const user = await this.usersService.findById(payload._id);
     if (!user) throw new UnauthorizedException('User does not exist');
 
     // Attach user info to request

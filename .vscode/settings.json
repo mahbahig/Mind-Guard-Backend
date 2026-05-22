@@ -1,0 +1,45 @@
+{
+  "material-icon-theme.activeIconPack": "nest",
+
+  "material-icon-theme.files.associations": {
+    "*.module.ts": "nest",
+    "*.controller.ts": "nest-controller",
+    "*.service.ts": "nest-service",
+    "*.guard.ts": "nest-guard",
+    "*.interceptor.ts": "nest-interceptor",
+    "*.decorator.ts": "nest-decorator",
+    // "*.dto.ts": "nest-dto",
+    "*.entity.ts": "nest-entity",
+    "*.schema.ts": "mint",
+    "*.repository.ts": "database",
+    "*.interface.ts": "interface",
+    "*.enum.ts": "tune",
+    "*.strategy.ts": "key",
+    "*.spec.ts": "test-ts",
+    "*.config.ts": "settings",
+    "swagger.config.ts": "swagger",
+    "swagger.setup.ts": "swagger",
+    "*.constants.ts": "credits",
+    // "index.ts": "routing",
+  },
+
+  "material-icon-theme.folders.associations": {
+    "modules": "nest",
+    "controllers": "controller",
+    "services": "service",
+    "guards": "guard",
+    "interceptors": "tools",
+    "decorators": "typescript",
+    "dto": "class",
+    "entities": "database",
+    "schemas": "mock",
+    "pipes": "pipe",
+    "middleware": "router",
+    "repositories": "repository",
+    "interfaces": "interface",
+    "strategies": "key",
+    "config": "config",
+    "logger": "log",
+    "swagger": "docs"
+  }
+}
