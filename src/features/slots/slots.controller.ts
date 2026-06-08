@@ -1,9 +1,9 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseEnumPipe } from '@nestjs/common';
 import { SlotsService } from './slots.service';
 import { CreateSlotDto, UpdateSlotDto } from './dto';
-import { Doctor, User } from '@common/decorators';
+import { Doctor, Roles, User } from '@common/decorators';
 import type { DoctorInRequest, UserInRequest } from '@shared/interfaces';
-import { SlotStatus } from '@shared/enums';
+import { SlotStatus, UserRole } from '@shared/enums';
 import { ParseObjectIdPipe } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import { FindAllOptionsDto } from '@common/dtos';
@@ -13,11 +13,13 @@ export class SlotsController {
   constructor(private readonly slotsService: SlotsService) {}
 
   @Post()
+  @Roles([UserRole.DOCTOR])
   createEmptySlot(@Doctor() doctor: DoctorInRequest, @Body() createSlotDto: CreateSlotDto) {
     return this.slotsService.createEmptySlot(doctor, createSlotDto);
   }
 
   @Get('my')
+  @Roles([UserRole.DOCTOR])
   getDoctorSlots(
     @Doctor() doctor: DoctorInRequest,
     @Query() query: FindAllOptionsDto,

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Types } from 'mongoose';
 import { PatientsRepository } from './patients.repository';
+
 @Injectable()
 export class PatientsService {
   constructor(private readonly patientsRepository: PatientsRepository) {}
@@ -15,7 +16,7 @@ export class PatientsService {
 
   async getDoctorPatients(doctorId: Types.ObjectId) {
     let message = 'Patients retrieved successfully';
-    const patients = await this.patientsRepository.findMany({ treatingDoctor: doctorId });
+    const patients = await this.patientsRepository.findDoctorPatientsWithInsights(doctorId);
     if (!patients.length) message = 'No patients for this doctor';
     return { message, data: patients };
   }

@@ -1,4 +1,4 @@
-import { PATIENT_MODEL_NAME } from '@features/patients';
+import { PATIENT_MODEL_NAME } from '@features/patients/patient.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ReadingType } from '@shared/enums';
 import { HydratedDocument, Types } from 'mongoose';

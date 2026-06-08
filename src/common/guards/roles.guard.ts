@@ -18,6 +18,8 @@ export class RolesGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const roles = this.reflector.getAllAndOverride(Roles, [context.getHandler(), context.getClass()]);
 
+    if (!roles?.length) return true;
+
     if (!roles.includes(request.user.role.toLowerCase())) throw new UnauthorizedException('Access denied. You are not authorized to access this resource');
 
     if (request.user.role === UserRole.DOCTOR) {
