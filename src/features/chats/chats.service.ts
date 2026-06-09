@@ -70,7 +70,7 @@ export class ChatsService {
     await this.messagesRepository.saveUserMessage(chatId, content);
 
     const chatMessages = await this.messagesRepository.getAllChatMessages(chatId);
-    // const 
+    // const
 
     // TODO: GET LATEST 5 MESSAGES FROM BOTH USER AND BOT, GIVEN THE chatId. AND SEND THEM TO THE BOT FOR CONTEXT.
     // TODO: GET USER DATA FROM THE DB AND HRV DATA FROM THE DB AND SEND THEM TO THE BOT FOR CONTEXT.

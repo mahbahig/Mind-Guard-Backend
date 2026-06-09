@@ -1,3 +1,3 @@
 export * from './chats.module';
 export * from './chats.service';
-export * from "./schemas";
+export * from './schemas';

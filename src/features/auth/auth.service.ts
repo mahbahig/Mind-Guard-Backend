@@ -41,6 +41,11 @@ export class AuthService {
     return { message: 'Login successful', data: token };
   }
 
+  async forgetPassword(email: string) {
+    // Check if user exists
+    if (!(await this.usersService.findByEmail(email))) throw new BadRequestException('User with this email does not exist');
+  }
+
   createToken(_id: Types.ObjectId, email: string, name: string, role: UserRole, rememberMe: boolean) {
     const jwtOptions = {
       secret: this.configService.getOrThrow<string>(Env.JWT_SECRET),

@@ -1,6 +1,6 @@
 import { Roles } from '@common/decorators';
 import { DoctorsService, PatientsService } from '@features';
-import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, UnauthorizedException, ForbiddenException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { UserRole } from '@shared/enums';
 
@@ -18,6 +18,9 @@ export class RolesGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const roles = this.reflector.getAllAndOverride(Roles, [context.getHandler(), context.getClass()]);
 
+    if (!roles) return true;
+    if (roles.length === 0) return true;
+
     if (!roles.includes(request.user.role.toLowerCase())) throw new UnauthorizedException('Access denied. You are not authorized to access this resource');
 
     if (request.user.role === UserRole.DOCTOR) {
@@ -28,7 +31,7 @@ export class RolesGuard implements CanActivate {
       const patient = await this.patientsService.findById(request.user._id);
       if (!patient) throw new UnauthorizedException('Access denied. You are not authorized to access this resource');
       request.patient = patient;
-    }
+    } else throw new ForbiddenException('Invalid user role');
 
     return true;
   }

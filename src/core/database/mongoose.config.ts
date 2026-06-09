@@ -1,6 +1,6 @@
-import { Env } from "@config";
-import { ConfigService } from "@nestjs/config";
-import { MongooseModuleAsyncOptions } from "@nestjs/mongoose";
+import { Env } from '@config';
+import { ConfigService } from '@nestjs/config';
+import { MongooseModuleAsyncOptions } from '@nestjs/mongoose';
 
 export const mongooseConfig = (): MongooseModuleAsyncOptions => ({
   inject: [ConfigService],
@@ -30,6 +30,6 @@ export const mongooseConfig = (): MongooseModuleAsyncOptions => ({
         console.error('Mongoose connection error:', err);
       });
       return connection;
-    }
+    },
   }),
 });

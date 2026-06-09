@@ -1,1 +1,1 @@
-export * from "./incoming-message.interface";
+export * from './incoming-message.interface';

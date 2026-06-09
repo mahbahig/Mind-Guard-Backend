@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { FeaturesModule } from './features';
@@ -10,12 +10,7 @@ import { AppConfigModule } from './config';
 import { CoreModule } from '@core';
 
 @Module({
-  imports: [
-    AppConfigModule,
-    CoreModule,
-    FeaturesModule,
-    EventEmitterModule.forRoot(),
-  ],
+  imports: [AppConfigModule, CoreModule, FeaturesModule, EventEmitterModule.forRoot()],
   controllers: [AppController],
   providers: [
     AppService,

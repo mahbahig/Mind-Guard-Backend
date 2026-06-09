@@ -1,1 +1,1 @@
-export * from "./socket-events.enum";
+export * from './socket-events.enum';

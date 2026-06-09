@@ -1,2 +1,2 @@
-export * from "./socket.module";
-export * from "./gateways";
+export * from './socket.module';
+export * from './gateways';

@@ -1,6 +1,6 @@
-import { Module } from "@nestjs/common";
-import { ChatsGateway } from "./gateways";
-import { ChatsModule } from "@features/chats";
+import { Module } from '@nestjs/common';
+import { ChatsGateway } from './gateways';
+import { ChatsModule } from '@features/chats';
 
 @Module({
   imports: [ChatsModule],

@@ -36,6 +36,6 @@ export enum Env {
   THROTTLE_LIMIT = 'throttle.limit',
 
   // Ai Service
-  AI = "ai",
-  AI_SERVER_URL="ai.serverUrl"
+  AI = 'ai',
+  AI_SERVER_URL = 'ai.serverUrl',
 }

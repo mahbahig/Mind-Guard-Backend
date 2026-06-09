@@ -1,4 +1,4 @@
-import { Model, MongooseUpdateQueryOptions, ProjectionType, QueryFilter, QueryOptions, Types, UpdateQuery } from "mongoose";
+import { Model, MongooseUpdateQueryOptions, ProjectionType, QueryFilter, QueryOptions, Types, UpdateQuery } from 'mongoose';
 
 export abstract class AbstractRepository<T> {
   constructor(protected readonly model: Model<T>) {}

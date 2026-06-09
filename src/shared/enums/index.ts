@@ -3,4 +3,4 @@ export * from './token';
 export * from './readings';
 export * from './messages';
 export * from './slots';
-export * from "./socket";
+export * from './socket';

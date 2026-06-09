@@ -17,5 +17,5 @@ export class ChatsGateway {
   async handleMessage(@MessageBody() message: IncomingMessage, @ConnectedSocket() client: Socket) {
     // TODO: Get real chatId
     await this.chatsService.generateResponse(new Types.ObjectId(), message.content, client);
-  };
+  }
 }

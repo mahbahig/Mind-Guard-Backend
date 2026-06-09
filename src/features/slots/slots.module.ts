@@ -4,8 +4,6 @@ import { SlotsController } from './slots.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { SlotsRepository } from './slots.repository';
 import { SLOT_MODEL_NAME, SlotSchema } from './slot.schema';
-;
-
 @Module({
   imports: [MongooseModule.forFeature([{ name: SLOT_MODEL_NAME, schema: SlotSchema }])],
   controllers: [SlotsController],

@@ -45,5 +45,5 @@ export const envValidationSchema = Joi.object({
   THROTTLE_LIMIT: Joi.number().default(100),
 
   // Ai
-  AI_SERVER_URL: Joi.string().required()
+  AI_SERVER_URL: Joi.string().required(),
 });
