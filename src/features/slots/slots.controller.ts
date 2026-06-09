@@ -1,8 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseEnumPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Query, ParseEnumPipe } from '@nestjs/common';
 import { SlotsService } from './slots.service';
-import { CreateSlotDto, UpdateSlotDto } from './dto';
+import { CreateSlotDto } from './dto';
 import { Doctor, User } from '@common/decorators';
-import type { DoctorInRequest, UserInRequest } from '@shared/interfaces';
 import { SlotStatus } from '@shared/enums';
 import { ParseObjectIdPipe } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
@@ -13,31 +12,31 @@ export class SlotsController {
   constructor(private readonly slotsService: SlotsService) {}
 
   @Post()
-  createEmptySlot(@Doctor() doctor: DoctorInRequest, @Body() createSlotDto: CreateSlotDto) {
-    return this.slotsService.createEmptySlot(doctor, createSlotDto);
+  createEmptySlot(@Doctor('_id') doctorId: Types.ObjectId, @Body() createSlotDto: CreateSlotDto) {
+    return this.slotsService.createEmptySlot(doctorId, createSlotDto);
   }
 
   @Get('my')
-  getDoctorSlots(
-    @Doctor() doctor: DoctorInRequest,
+  doctorGetOwnSlots(
+    @Doctor('_id') doctorId: Types.ObjectId,
     @Query() query: FindAllOptionsDto,
     @Query('status', new ParseEnumPipe(SlotStatus, { optional: true })) status?: SlotStatus,
   ) {
-    return this.slotsService.getDoctorSlots(doctor._id, query, status);
+    return this.slotsService.doctorGetOwnSlots(doctorId, query, status);
+  }
+
+  @Get('doctor/:id')
+  getDoctorFreeSlots(@Param('id', ParseObjectIdPipe) id: Types.ObjectId) {
+    return this.slotsService.getDoctorFreeSlots(id);
   }
 
   @Get(':id')
-  getSlot(@User() user: UserInRequest, @Param('id', ParseObjectIdPipe) id: Types.ObjectId) {
-    return this.slotsService.getSlot(user._id, id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSlotDto: UpdateSlotDto) {
-    return this.slotsService.update(+id, updateSlotDto);
+  getSlot(@User('_id') userId: Types.ObjectId, @Param('id', ParseObjectIdPipe) id: Types.ObjectId) {
+    return this.slotsService.getSlot(userId, id);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.slotsService.remove(+id);
+  deleteSlot(@Param('id', ParseObjectIdPipe) id: Types.ObjectId) {
+    return this.slotsService.deleteSlot(id);
   }
 }
