@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Body, Param, Delete, Query, ParseEnumPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Query, ParseEnumPipe, Patch } from '@nestjs/common';
 import { SlotsService } from './slots.service';
-import { CreateSlotDto } from './dto';
-import { Doctor, User } from '@common/decorators';
+import { CreateSlotDto, UpdateSlotDto } from './dto';
+import { Doctor, Patient, User } from '@common/decorators';
 import { SlotStatus } from '@shared/enums';
 import { ParseObjectIdPipe } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
@@ -25,9 +25,24 @@ export class SlotsController {
     return this.slotsService.doctorGetOwnSlots(doctorId, query, status);
   }
 
+  @Patch(':id/assign')
+  assignPatientToSlot(@Patient('_id') patientId: Types.ObjectId, @Param('id', ParseObjectIdPipe) slotId: Types.ObjectId) {
+    return this.slotsService.assignPatientToSlot(slotId, patientId);
+  }
+
+  @Patch(':id/book')
+  bookSlot(@Patient('_id') patientId: Types.ObjectId, @Param('id', ParseObjectIdPipe) slotId: Types.ObjectId) {
+    return this.slotsService.bookSlot(slotId, patientId);
+  }
+
   @Get('doctor/:id')
   getDoctorFreeSlots(@Param('id', ParseObjectIdPipe) id: Types.ObjectId) {
     return this.slotsService.getDoctorFreeSlots(id);
+  }
+
+  @Patch(':id')
+  updateSlot(@Doctor('_id') doctorId: Types.ObjectId, @Param('id', ParseObjectIdPipe) slotId: Types.ObjectId, @Body() updateSlotDto: UpdateSlotDto) {
+    return this.slotsService.updateSlot(doctorId, slotId, updateSlotDto);
   }
 
   @Get(':id')

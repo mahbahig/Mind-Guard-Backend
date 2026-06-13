@@ -31,4 +31,4 @@ export class Slot {
 export type SlotDocument = HydratedDocument<Slot>;
 export const SlotSchema = SchemaFactory.createForClass(Slot);
 
-SlotSchema.index({ doctor: 1, startTime: 1, endTime: 1 }, { unique: true });
+SlotSchema.index({ doctor: 1, startTime: 1 }, { unique: true });

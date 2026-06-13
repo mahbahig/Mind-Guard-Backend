@@ -26,6 +26,12 @@ export class SlotsService {
     return { message, data: slots };
   }
 
+  async assignPatientToSlot(slotId: Types.ObjectId, patientId: Types.ObjectId) {
+    const result = await this.slotsRepository.updateOne({ _id: slotId, status: SlotStatus.AVAILABLE }, { status: SlotStatus.BOOKED, patient: patientId });
+    if (result.matchedCount === 0) throw new BadRequestException('Slot is not available for booking');
+    return { message: 'Patient assigned to slot successfully' };
+  }
+
   async getDoctorFreeSlots(id: Types.ObjectId) {
     let message: string = 'Free slots retrieved successfully';
     const slots = await this.slotsRepository.findMany({ doctor: id, status: SlotStatus.AVAILABLE });
@@ -48,6 +54,12 @@ export class SlotsService {
     const result = await this.slotsRepository.updateOne({ _id: slotId, status: SlotStatus.AVAILABLE }, { status: SlotStatus.BOOKED, patient: patientId });
     if (result.matchedCount === 0) throw new BadRequestException('Slot is not available for booking');
     return { message: 'Slot booked successfully' };
+  }
+
+  async updateSlot(doctorId: Types.ObjectId, slotId: Types.ObjectId, updateSlotDto: UpdateSlotDto) {
+    const result = await this.slotsRepository.updateOne({ _id: slotId, doctor: doctorId }, updateSlotDto);
+    if (result.matchedCount === 0) throw new NotFoundException('Slot not found or you are not the owner');
+    return { message: 'Slot updated successfully' };
   }
 
   async cancelSlot(slotId: Types.ObjectId, patientId: Types.ObjectId) {

@@ -10,6 +10,7 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalInterceptors(new SuccessResponseInterceptor());
   app.setGlobalPrefix('api');
+  app.enableCors({ origin: '*' });
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

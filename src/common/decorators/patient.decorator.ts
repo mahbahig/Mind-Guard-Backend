@@ -1,7 +1,9 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { PatientInRequest, RequestWithPatient } from '@shared/interfaces';
 
-export const Patient = createParamDecorator((_: unknown, ctx: ExecutionContext): PatientInRequest => {
-  const request: RequestWithPatient = ctx.switchToHttp().getRequest<RequestWithPatient>();
-  return request.patient;
+export const Patient = createParamDecorator((field: keyof PatientInRequest | undefined, ctx: ExecutionContext): any => {
+  const request = ctx.switchToHttp().getRequest<RequestWithPatient>();
+  const patient = request.patient;
+  return field ? patient[field] : patient;
 });
+
