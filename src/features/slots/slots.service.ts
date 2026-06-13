@@ -5,10 +5,11 @@ import { SlotStatus } from '@shared/enums';
 import { FindAllOptionsDto } from '@common/dtos';
 import { SlotsRepository } from './slots.repository';
 import { MongoServerError } from 'mongodb';
+import { PatientsService } from '@features/patients';
 
 @Injectable()
 export class SlotsService {
-  constructor(private readonly slotsRepository: SlotsRepository) {}
+  constructor(private readonly slotsRepository: SlotsRepository, private readonly patientsService: PatientsService) {}
   async createEmptySlot(doctorId: Types.ObjectId, createSlotDto: CreateSlotDto) {
     try {
       const slot = await this.slotsRepository.create({ ...createSlotDto, doctor: doctorId, status: SlotStatus.AVAILABLE });
@@ -27,6 +28,8 @@ export class SlotsService {
   }
 
   async assignPatientToSlot(slotId: Types.ObjectId, patientId: Types.ObjectId) {
+    const patient = await this.patientsService.findById(patientId);
+    if (!patient) throw new NotFoundException('Patient not found');
     const result = await this.slotsRepository.updateOne({ _id: slotId, status: SlotStatus.AVAILABLE }, { status: SlotStatus.BOOKED, patient: patientId });
     if (result.matchedCount === 0) throw new BadRequestException('Slot is not available for booking');
     return { message: 'Patient assigned to slot successfully' };
