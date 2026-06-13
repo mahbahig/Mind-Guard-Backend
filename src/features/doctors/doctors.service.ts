@@ -24,11 +24,6 @@ export class DoctorsService {
     return { message: 'Doctor retrieved successfully', data: doctor };
   }
 
-  async createSessionSlots(doctorId: Types.ObjectId, createSessionSlotsDto: CreateSessionSlotsDto) {
-    // Implementation for creating session slots
-    const doctor = await this.doctorsRepository.findById(doctorId);
-  }
-
   async findById(doctorId: Types.ObjectId) {
     return await this.doctorsRepository.findById(doctorId);
   }

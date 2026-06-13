@@ -14,4 +14,12 @@ export class ReadingsRepository extends BaseRepository<Reading> {
   saveMood(patientId: Types.ObjectId, mood: Mood) {
     return this.create({ patient: patientId, type: ReadingType.MOOD, value: mood });
   }
+
+  getMood(patientId: Types.ObjectId, from?: Date, to?: Date) {
+    const filter: Record<string, any> = { patient: patientId, type: ReadingType.MOOD };
+    if (from || to) filter.createdAt = {};
+    if (from) filter.createdAt.$gte = from;
+    if (to) filter.createdAt.$lte = to;
+    return this.findMany(filter, { createdAt: -1 });
+  }
 }
