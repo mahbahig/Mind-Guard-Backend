@@ -24,9 +24,9 @@ export class SlotsRepository extends BaseRepository<Slot> {
     const filter: QueryFilter<Slot> = { doctor: doctorId };
 
     if (options.from || options.to) {
-      filter.createdAt = {};
-      if (options.from) filter.createdAt.$gte = options.from;
-      if (options.to) filter.createdAt.$lte = options.to;
+      filter.startTime = {};
+      if (options.from) filter.startTime.$gte = options.from;
+      if (options.to) filter.startTime.$lte = options.to;
     }
     if (status) filter.status = status;
 
@@ -38,5 +38,17 @@ export class SlotsRepository extends BaseRepository<Slot> {
       .sort({ [options.sortBy]: options.sortOrder })
       .skip(skip)
       .limit(limit);
+  }
+
+  findPatientSlots(patientId: Types.ObjectId) {
+    return this.slotModel.find({ patient: patientId }).sort({ startTime: 1, _id: 1 });
+  }
+
+  updateSlot(slotId: Types.ObjectId, update: Partial<Slot>) {
+    return this.slotModel.findByIdAndUpdate(slotId, update, { returnDocument: 'after' });
+  }
+
+  deleteSlot(slotId: Types.ObjectId) {
+    return this.slotModel.findByIdAndDelete(slotId);
   }
 }

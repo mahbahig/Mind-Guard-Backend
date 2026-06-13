@@ -14,4 +14,19 @@ export class ReadingsRepository extends BaseRepository<Reading> {
   saveMood(patientId: Types.ObjectId, mood: Mood) {
     return this.create({ patient: patientId, type: ReadingType.MOOD, value: mood });
   }
+
+  getMoodReadings(patientId: Types.ObjectId, from?: string, to?: string) {
+    const filter: Record<string, unknown> = {
+      patient: patientId,
+      type: ReadingType.MOOD,
+    };
+
+    if (from || to) {
+      filter.createdAt = {};
+      if (from) (filter.createdAt as Record<string, Date>).$gte = new Date(from);
+      if (to) (filter.createdAt as Record<string, Date>).$lte = new Date(to);
+    }
+
+    return this.readingModel.find(filter).sort({ createdAt: 1, _id: 1 });
+  }
 }

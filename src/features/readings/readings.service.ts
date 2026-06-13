@@ -11,4 +11,9 @@ export class ReadingsService {
     const reading = await this.readingsRepository.saveMood(patientId, mood);
     return { message: 'Mood saved successfully', data: reading };
   }
+
+  async getMoodHistory(patientId: Types.ObjectId, from?: string, to?: string) {
+    const readings = await this.readingsRepository.getMoodReadings(patientId, from, to);
+    return { message: 'Mood history retrieved successfully', data: readings };
+  }
 }

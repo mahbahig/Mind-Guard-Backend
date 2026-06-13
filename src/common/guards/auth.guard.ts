@@ -5,6 +5,8 @@ import { TokenPrefix } from '@shared/enums';
 import { Reflector } from '@nestjs/core';
 import { UsersService } from '@features';
 import { Env } from '@config';
+import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -34,12 +36,26 @@ export class AuthGuard implements CanActivate {
 
     // Validate token prefix
     if (prefix.toLowerCase() !== TokenPrefix.BEARER) throw new UnauthorizedException('Invalid token prefix');
-    const payload = this.jwtService.verify(token, { secret: this.configService.getOrThrow<string>(Env.JWT_SECRET) });
+    let payload: { _id?: string };
+    try {
+      payload = this.jwtService.verify(token, {
+        secret: this.configService.getOrThrow<string>(Env.JWT_SECRET),
+      });
+    } catch (error) {
+      if (error instanceof TokenExpiredError) {
+        throw new UnauthorizedException('Authorization token has expired');
+      }
+      if (error instanceof JsonWebTokenError) {
+        throw new UnauthorizedException('Invalid authorization token');
+      }
+      throw error;
+    }
 
     // Check for payload validity
     if (!payload || !payload._id) throw new UnauthorizedException('Invalid token payload');
+    if (!Types.ObjectId.isValid(payload._id)) throw new UnauthorizedException('Invalid token payload');
     // Check if user exists in database
-    const user = await this.usersService.findById(payload._id);
+    const user = await this.usersService.findById(new Types.ObjectId(payload._id));
     if (!user) throw new UnauthorizedException('User does not exist');
 
     // Attach user info to request

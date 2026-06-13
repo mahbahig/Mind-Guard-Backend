@@ -8,21 +8,23 @@ import type { DoctorInRequest } from '@shared/interfaces';
 import { CreateSessionSlotsDto } from './dto';
 
 @Controller('doctors')
-@Roles([UserRole.DOCTOR])
 export class DoctorsController {
   constructor(private readonly doctorsService: DoctorsService) {}
 
   @Get()
+  @Roles([UserRole.DOCTOR, UserRole.PATIENT])
   getAllDoctors() {
     return this.doctorsService.getAllDoctors();
   }
 
   @Get(':id')
+  @Roles([UserRole.DOCTOR, UserRole.PATIENT])
   getDoctor(@Param('id', ParseObjectIdPipe) id: Types.ObjectId) {
     return this.doctorsService.getDoctor(id);
   }
 
   @Post()
+  @Roles([UserRole.DOCTOR])
   createSessionSlots(@User() doctor: DoctorInRequest, @Body() createSessionSlotsDto: CreateSessionSlotsDto) {
     return this.doctorsService.createSessionSlots(doctor._id, createSessionSlotsDto);
   }
