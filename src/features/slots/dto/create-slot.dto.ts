@@ -29,6 +29,7 @@ export class CreateSlotDto {
   @IsDateString()
   startTime!: string;
 
+  
   @IsDateString()
   endTime!: string;
 
